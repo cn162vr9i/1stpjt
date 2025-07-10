@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+</head>
+
+<body>
+	<h1>******** test ********</h1>
+	<span th:text="${teststr}"></span>
+	<form th:action="@{/S01}" th:method="post" th:object="${s01Form}">
+		<table>
+			<tr>
+				<td>
+					<label for="rdo1">
+						セッションを殺しますか？
+					</label>
+					<input type="checkbox" name="rdo1" th:checked="*{rdo1}">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="submit" th:name="action01" value="アクション">
+				</td>
+			</tr>
+			
+		</table>
+		
+	</form>
+</body>
+</html>
