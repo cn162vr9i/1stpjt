@@ -25,6 +25,6 @@ public class SessionListener implements HttpSessionListener {
 		log.debug("-------------< kill session {}>-------------", se.getSession().getId());
 		HttpSessionListener.super.sessionDestroyed(se);
 		HttpSession session = se.getSession();
-		ConnectionHolderInstHandler.invalidate(session.getId());
+		ConnectionHolderInstHandler.remove(session);
 	}
 }

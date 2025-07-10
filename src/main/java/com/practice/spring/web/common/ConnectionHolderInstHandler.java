@@ -23,7 +23,7 @@ public class ConnectionHolderInstHandler {
 			}).build();
 
 	public static Cache<String, Object> get(final HttpSession session) throws Exception {
-		final String sessionId = new String(session.getId());
+		final String sessionId = session.getId();
 		return INSTANCE_CACHE.getIfPresent(sessionId);
 	}
 
@@ -48,7 +48,7 @@ public class ConnectionHolderInstHandler {
 		} else {
 			log.debug("conn = {}", instance.getConn().hashCode());
 		}
-		element.put(new String(pgmName), instance);
+		element.put(pgmName, instance);
 		String weakKey = session.getId();
 		INSTANCE_CACHE.put(weakKey, element);
 		log.debug("登録しました.sessionid[{}]", weakKey);
@@ -64,7 +64,13 @@ public class ConnectionHolderInstHandler {
 			return;
 		}
 		Cache<String, Object> cache = INSTANCE_CACHE.getIfPresent(sessionId);
-		log.debug("{}個のcacheを解放します", cache.asMap().keySet().size());
+		if (cache == null) {
+			log.warn("cacheがnullのため解放せずに返します");
+			return;
+		} else {
+			log.debug("{}個のcacheを解放します", cache.asMap().keySet().size());
+		}
+
 		for (String key : cache.asMap().keySet()) {
 			remove(cache, key);
 		}
