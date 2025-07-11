@@ -33,11 +33,15 @@ public class CommonController {
 		//DBのコネクションを取得
 		HoldConnectionObj instance = new HoldConnectionObj();
 		instance.setConn(ConnectionProvider.getConnection());
+		HoldConnectionObj instance2 = new HoldConnectionObj();
+		instance2.setConn(ConnectionProvider.getConnection());
+
 		HttpSession session = request.getSession(false);
 		if (session == null) {
 			session = request.getSession(true);
 			log.debug("session=[{}]",session.getId());
 			ConnectionHolderInstHandler.put(session, Screen01Controller.INSTANCE_KEY, instance);
+			ConnectionHolderInstHandler.put(session, Screen01Controller.INSTANCE_KEY2, instance2);
 		}
 
 		mov.addObject("s01Form", new S01Form());

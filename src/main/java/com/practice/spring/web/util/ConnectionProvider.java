@@ -9,11 +9,16 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.springframework.boot.jdbc.DataSourceBuilder;
+
 public class ConnectionProvider {
 
 	private static final ThreadLocal<Connection> TH_CONN = new ThreadLocal<Connection>();
 	private static final DataSource ds;
 	public static final boolean isStartWebServer = false;
+	private static final String url = "jdbc:oracle:thin:@//localhost:1521/SAMPLE";
+	private static final String id = "dbuser1";
+	private static final String pass = "2vkicn1r";
 
 	static {
 		if (isStartWebServer) {
@@ -26,13 +31,29 @@ public class ConnectionProvider {
 				throw new RuntimeException(e);
 			}
 		} else {
-			ds = null;
+			ds = DataSourceBuilder.create()
+					.username(id)
+					.password(pass)
+					.url(url)
+					.build();
 		}
 	}
 
-	private static final String url = "jdbc:oracle:thin:@//localhost:1521/SAMPLE";
-	private static final String id = "dbuser1";
-	private static final String pass = "2vkicn1r";
+	public static Connection getNewConnection() {
+		Connection connection = null;
+		try {
+			if (ds != null) {
+				connection = ds.getConnection();
+			} else {
+				connection = DriverManager.getConnection(url, id, pass);
+			}
+			connection.setAutoCommit(false);
+		} catch (SQLException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+		return connection;
+	}
 
 	public static Connection getConnection() {
 		Connection connection = TH_CONN.get();
