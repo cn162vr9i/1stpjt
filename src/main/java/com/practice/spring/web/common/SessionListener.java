@@ -1,5 +1,7 @@
 package com.practice.spring.web.common;
 
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionEvent;
@@ -12,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @WebListener
 @Component
 @Slf4j
-public class SessionListener implements HttpSessionListener {
+public class SessionListener implements HttpSessionListener, ServletContextListener {
 
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
@@ -26,5 +28,11 @@ public class SessionListener implements HttpSessionListener {
 		HttpSessionListener.super.sessionDestroyed(se);
 		HttpSession session = se.getSession();
 		ConnectionHolderInstHandler.remove(session);
+	}
+
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+		// TODO 自動生成されたメソッド・スタブ
+		ServletContextListener.super.contextDestroyed(sce);
 	}
 }
