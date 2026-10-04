@@ -18,8 +18,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.practice.spring.web.common.ConnectionHolderInstHandler;
 import com.practice.spring.web.common.HoldConnectionObj;
 import com.practice.spring.web.dao.S01Dao;
+import com.practice.spring.web.entity.EmailMessageDTO;
 import com.practice.spring.web.form.S01Form;
 import com.practice.spring.web.util.ConnectionProvider;
+import com.practice.spring.web.util.JmsMessageProducer;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +32,12 @@ public class Screen01Controller {
 
 	public static final String INSTANCE_KEY = "INST01";
 	public static final String INSTANCE_KEY2 = "INST02";
+
+	private final JmsMessageProducer producer;
+
+	public Screen01Controller(final JmsMessageProducer producer) {
+		this.producer = producer;
+	}
 
 	@PostMapping(path = "", params = "action01")
 	public ModelAndView init(final HttpServletRequest request, final ModelAndView mov,
@@ -97,7 +105,7 @@ public class Screen01Controller {
 		if (form.isRdo1()) {
 			if (session != null) {
 				log.debug("sessionを殺しますのでLogを参照");
-//				ConnectionHolderInstHandler.remove(session);
+				//				ConnectionHolderInstHandler.remove(session);
 				session.invalidate();
 				mov.setViewName("s01");
 				System.gc(); // GCを呼ぶ（※強制ではない）
@@ -114,6 +122,16 @@ public class Screen01Controller {
 			mov.setViewName("forward:/");
 		}
 		mov.addObject("teststr", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
+		return mov;
+	}
+
+	@PostMapping(path = "", params = "send")
+	public ModelAndView sendMessage(final HttpServletRequest request, final ModelAndView mov) {
+		EmailMessageDTO message = new EmailMessageDTO("my-email@mail.server", "Message Queue test body");
+		producer.send(message);
+
+		mov.addObject("sentResult","Sending Message OK");
+		mov.setViewName("forward:/");
 		return mov;
 	}
 }

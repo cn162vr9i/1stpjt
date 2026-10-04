@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.practice.spring.web.common.ConnectionHolderInstHandler;
 import com.practice.spring.web.common.HoldConnectionObj;
 import com.practice.spring.web.form.S01Form;
 import com.practice.spring.web.util.ConnectionProvider;
@@ -40,8 +39,8 @@ public class CommonController {
 		if (session == null) {
 			session = request.getSession(true);
 			log.debug("session=[{}]",session.getId());
-			ConnectionHolderInstHandler.put(session, Screen01Controller.INSTANCE_KEY, instance);
-			ConnectionHolderInstHandler.put(session, Screen01Controller.INSTANCE_KEY2, instance2);
+//			ConnectionHolderInstHandler.put(session, Screen01Controller.INSTANCE_KEY, instance);
+//			ConnectionHolderInstHandler.put(session, Screen01Controller.INSTANCE_KEY2, instance2);
 		}
 
 		mov.addObject("s01Form", new S01Form());
