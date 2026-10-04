@@ -30,6 +30,6 @@ public class EmailMessageDTO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "To:" + this.to + "Body:" + this.body;
+		return "To:" + this.to + ",Body:" + this.body;
 	}
 }
